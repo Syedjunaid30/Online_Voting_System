@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+        }
+        nav {
+            background-color: #34495e;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        nav a, nav button {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        nav a:hover, nav button:hover {
+            background-color: #2c3e50;
+        }
+        nav form {
+            margin: 0;
+        }
+        h1 {
+            margin: 1rem;
+            color: #2c3e50;
+            text-align: center;
+        }
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .party-card, .party-skeleton {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-left: 8px solid;
+            min-height: 80px;
+        }
+        .party-logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 1rem;
+            object-fit: contain;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .party-info {
+            flex-grow: 1;
+        }
+        .party-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+        .vote-count {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Skeleton styles */
+        .party-skeleton {
+            border-color: transparent !important;
+        }
+        .skeleton-rect {
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        .skeleton-logo {
+            width: 60px;
+            height: 60px;
+            margin-right: 1rem;
+        }
+        .skeleton-text-big {
+            width: 150px;
+            height: 20px;
+            margin-bottom: 8px;
+        }
+        .skeleton-text-small {
+            width: 100px;
+            height: 16px;
+        }
+
+        @keyframes pulse {
+            0% {opacity: 1;}
+            50% {opacity: 0.4;}
+            100% {opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('admin_manage_parties') }}">Election Parties</a>
+        <a href="{{ url_for('admin_live_results') }}">Live Results</a>
+        <a href="{{ url_for('admin_list_users') }}">User Management</a>
+        <form action="{{ url_for('reset_all') }}" method="post" onsubmit="return confirm('Are you sure you want to reset all data? This action cannot be undone.')">
+            <button type="submit" style="background-color: #e74c3c;">🔄 Reset All</button>
+        </form>
+        <a href="{{ url_for('download_results') }}">📄 Download Voting Results (PDF)</a>
+        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </nav>
+
+    <h1>Election Parties</h1>
+
+    <div class="results-container" id="resultsContainer">
+        <!-- Skeleton Loading Placeholders -->
+        <div class="party-skeleton">
+            <div class="skeleton-rect skeleton-logo"></div>
+            <div class="party-info">
+                <div class="skeleton-rect skeleton-text-big"></div>
+                <div class="skeleton-rect skeleton-text-small"></div>
+            </div>
+        </div>
+        <div class="party-skeleton">
+            <div class="skeleton-rect skeleton-logo"></div>
+            <div class="party-info">
+                <div class="skeleton-rect skeleton-text-big"></div>
+                <div class="skeleton-rect skeleton-text-small"></div>
+            </div>
+        </div>
+        <div class="party-skeleton">
+            <div class="skeleton-rect skeleton-logo"></div>
+            <div class="party-info">
+                <div class="skeleton-rect skeleton-text-big"></div>
+                <div class="skeleton-rect skeleton-text-small"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/load_parties.js') }}"></script>
+</body>
+</html>

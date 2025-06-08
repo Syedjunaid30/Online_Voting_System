@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin - Register User</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        form { max-width: 400px; margin: auto; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px 15px; }
+        .flash { color: red; }
+        nav a { margin-right: 15px; text-decoration: none; color: blue; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin_manage_parties') }}">Manage Parties</a>
+        <a href="{{ url_for('admin_live_results') }}">Live Results</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+
+    <h2>User Registration</h2>
+
+        <label for="name">Full Name:</label><br>
+        <input type="text" name="name" id="name" required><br><br>
+
+        <label for="voter_id">Voter ID:</label><br>
+        <input type="text" name="voter_id" id="voter_id" required><br><br>
+
+        <label for="epic_no">EPIC Number:</label><br>
+        <input type="text" name="epic_no" id="epic_no" required><br><br>
+
+        <label for="dob">Date of Birth:</label><br>
+        <input type="date" name="dob" id="dob" required><br><br>
+
+        <label for="phone">Phone Number:</label><br>
+        <input type="tel" name="phone" id="phone" required><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" name="password" id="password" required><br><br>
+
+        <label for="face_image">Upload Face Image:</label><br>
+        <input type="file" name="face_image" id="face_image" accept="image/*" required><br><br>
+
+        <button type="submit">Register</button>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="error" style="color: red; margin-top: 1rem;">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        
+    </form>
+</body>
+</html>

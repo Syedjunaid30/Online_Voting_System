@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Live Voting Results</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f9fa;
+      color: #212529;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 60px;
+    }
+
+    nav.navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background-color: #343a40;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    nav.navbar a {
+      color: #f8f9fa;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+
+    h1 {
+      margin-bottom: 25px;
+      font-weight: 700;
+      font-size: 2rem;
+      color: #343a40;
+    }
+
+    .chart-container {
+      background: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      width: 600px;
+      max-width: 90vw;
+      height: 380px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #votesChart {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    #votesTable {
+      border-collapse: collapse;
+      width: 70%;
+      margin-top: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    #votesTable th, #votesTable td {
+      padding: 12px;
+      border: 1px solid #dee2e6;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    #votesTable thead {
+      background-color: #343a40;
+      color: white;
+    }
+
+    h3 {
+      margin-top: 30px;
+      color: #343a40;
+    }
+
+    .download-btn {
+        background-color: #007BFF;
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .download-btn:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="{{ dashboard_url }}">← Back to Admin Dashboard</a>
+    <div style="text-align: right; margin: 1rem;">
+    <a href="{{ url_for('download_results') }}" class="download-btn">Download Results (PDF)</a>
+</div>
+  </nav>
+
+  <h1>Live Voting Results</h1>
+
+  <div id="results-wrapper" style="display: flex; flex-direction: column; align-items: center;">
+    <div class="chart-container">
+      <canvas id="votesChart"></canvas>
+    </div>
+
+    <h3>🗳️ Live Vote Count</h3>
+    <table id="votesTable">
+      <thead>
+        <tr>
+          <th>Party</th>
+          <th>Votes</th>
+        </tr>
+      </thead>
+      <tbody id="votesTableBody">
+        <!-- Filled dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/live_results.js') }}"></script>
+</body>
+</html>

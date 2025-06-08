@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin - Manage Parties</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        form { max-width: 400px; margin-bottom: 30px; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px 15px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        nav a { margin-right: 15px; text-decoration: none; color: blue; }
+        .color-box {
+            display: inline-block;
+            width: 25px;
+            height: 20px;
+            border: 1px solid #ccc;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin_register_user') }}">Register User</a>
+        <a href="{{ url_for('admin_live_results') }}">Live Results</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+
+    <h2>Manage Election Parties</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul style="color: green;">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" enctype="multipart/form-data">
+    <label>Party Name:</label>
+    <input type="text" name="name" required />
+
+    <label>Party Color (Hex code):</label>
+    <input type="text" name="color" placeholder="#FF0000" required />
+
+    <label>Party Logo (Image Upload):</label>
+    <input type="file" name="logo" accept="image/*" required />
+
+    <button type="submit">Add Party</button>
+</form>
+
+<h3>Existing Parties</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Color</th>
+            <th>Logo</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for party in parties %}
+    <tr>
+        <td>
+            <form method="POST" enctype="multipart/form-data" action="{{ url_for('admin_update_party', party_id=party.id) }}">
+                <input type="text" name="name" value="{{ party.name }}" required />
+        </td>
+        <td>
+                <input type="text" name="color" value="{{ party.color }}" required />
+        </td>
+        <td>
+                <input type="file" name="logo" accept="image/*" />
+                {% if party.logo %}
+                    <br><img src="{{ url_for('static', filename='uploads/' + party.logo) }}" width="50" />
+                {% endif %}
+        </td>
+        <td>
+                <button type="submit">Update</button>
+            </form>
+
+            <form action="{{ url_for('delete_party', party_id=party.id) }}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Are you sure you want to delete this party?');">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+</body>
+</html>

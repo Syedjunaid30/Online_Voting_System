@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>User Dashboard - Online Voting System</title>
+    <style>
+        body {
+            background-color: #121212;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+        }
+
+        .party-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .party-card {
+            background-color: #1f1f1f;
+            padding: 1.5rem;
+            border-radius: 12px;
+            width: 250px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s;
+            border-top: 8px solid;
+        }
+
+        .party-card:hover {
+            transform: scale(1.05);
+        }
+
+        .party-card img {
+            max-width: 80px;
+            max-height: 80px;
+            margin-bottom: 1rem;
+        }
+
+        .party-card h3 {
+            margin: 0.5rem 0;
+        }
+
+        .vote-btn {
+            margin-top: 1rem;
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #555;
+            color: #ccc;
+        }
+
+        .vote-btn.enabled {
+            background-color: var(--btn-color);
+            color: white;
+            cursor: pointer;
+        }
+
+        .vote-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .center-video-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        #video-container {
+            position: relative;
+            width: 320px;
+            height: 240px;
+        }
+
+        video {
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        canvas {
+            border-radius: 10px;
+        }
+
+        .logout {
+            margin-top: 2rem;
+        }
+
+        .logout a {
+            color: #00d9ff;
+            text-decoration: none;
+        }
+
+        .logout a:hover {
+            text-decoration: underline;
+        }
+
+        .info-msg {
+            font-size: 1.2rem;
+            background-color: #333;
+            display: inline-block;
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            border-left: 5px solid orange;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Welcome, {{ session['user_name'] }}</h2>
+
+    {% if already_voted %}
+        <h3 style="color: lightgreen;">You have already voted.</h3>
+
+    {% elif parties|length == 0 %}
+        <div class="info-msg">
+            Elections have not yet been configured. Please check back later.
+        </div>
+
+    {% else %}
+        <p>Please verify your face to enable voting.</p>
+
+        <div class="center-video-wrapper">
+            <div id="video-container">
+                <video id="video" width="320" height="240" autoplay muted></video>
+            </div>
+        </div>
+
+        <p id="status">Initializing face recognition...</p>
+
+        <div class="party-list" id="partyList">
+            {% for party in parties %}
+            <form method="POST" action="{{ url_for('vote') }}" class="party-form">
+                <div class="party-card" style="border-top-color: {{ party['color'] }};">
+                    <img src="{{ url_for('static', filename='party_logos/' + party['logo']) }}"
+                        alt="{{ party['name'] }} Logo">
+                    <h3>{{ party['name'] }}</h3>
+                    <input type="hidden" name="party_id" value="{{ party['id'] }}">
+                    <button type="submit" class="vote-btn" disabled style="--btn-color: {{ party['color'] }}">Vote</button>
+                </div>
+            </form>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="logout">
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <script>
+        const alreadyVoted = {{ 'true' if already_voted else 'false' }};
+        const userId = {{ user_id|tojson }};
+    </script>
+
+    {% if not already_voted and parties|length > 0 %}
+        <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+        <script src="{{ url_for('static', filename='js/face_verification.js') }}"></script>
+    {% endif %}
+</body>
+
+</html>
