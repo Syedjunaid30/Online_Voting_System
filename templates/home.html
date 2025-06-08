@@ -1,67 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Online Voting System</title>
-    <style>
-        body {
-            background-color: #1c1c1c;
-            color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        nav {
-            background-color: #333;
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-        }
-        nav .logo {
-            font-size: 1.5rem;
-            color: white;
-        }
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 1.5rem;
-        }
-        nav ul li {
-            display: inline;
-        }
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        nav ul li a:hover {
-            color: #00d9ff;
-        }
-        .container {
-            padding: 4rem;
-            text-align: center;
-        }
-        h1 {
-            font-size: 2.5rem;
-        }
-        p {
-            font-size: 1.2rem;
-            margin-top: 1rem;
-            color: #ccc;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <title>BharatVote - Online Voting System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 <body>
-    <nav>
-        <div class="logo">Online Voting System</div>
+    <nav>   
+        <div class="logo">🇮🇳 BharatVote</div>
         <ul>
             <li><a href="{{ url_for('login') }}">Login</a></li>
             <li><a href="{{ url_for('register') }}">Register</a></li>
         </ul>
     </nav>
-    <div class="container">
-        <h1>Welcome to the Secure Online Voting System</h1>
-        <p>Cast your vote easily and securely. Transparent. Real-time. Reliable.</p>
+
+   <header class="hero-section">
+    <video autoplay muted loop id="bg-video">
+        <source src="{{ url_for('static', filename='videos/flag.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="overlay"></div>
+    <div class="hero-content">
+        <h1>Welcome to Swarajya – India's Secure Digital Voting</h1>
+        <p>Vote with trust, power, and transparency</p>
+        <a href="{{ url_for('register') }}" class="cta-button">Get Started</a>
     </div>
+</header>
+
+
+    <section class="faq">
+        <h2>FAQs - Your Voting Questions Answered</h2>
+        <div class="accordion">
+            <div class="accordion-item">
+                <button class="accordion-button">🛡️ How secure is my vote?</button>
+                <div class="accordion-content">
+                    <p>All votes are protected with face recognition and encrypted in real time.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-button">🧾 Can I vote twice?</button>
+                <div class="accordion-content">
+                    <p>No, the system restricts users to a single verified vote per election.</p>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <button class="accordion-button">🌍 Can I vote from another state or country?</button>
+                <div class="accordion-content">
+                    <p>Yes. Voting is accessible nationwide with your verified identity.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 BharatVote • Digital Voting for a Stronger Democracy</p>
+    </footer>
+
+    <script>
+        const buttons = document.querySelectorAll('.accordion-button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                button.classList.toggle('active');
+                document.querySelectorAll('.accordion-content').forEach(c => {
+                    if (c !== content) c.style.maxHeight = null;
+                });
+                content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
+            });
+        });
+    </script>
 </body>
 </html>
- 
