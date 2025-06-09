@@ -1,73 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>BharatVote - Online Voting System</title>
+    <title>VoteUnity – Secure Your Say</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 </head>
+
 <body>
-    <nav>   
-        <div class="logo">🇮🇳 BharatVote</div>
+    <nav>
+        <div class="logo">VoteUnity</div>
         <ul>
             <li><a href="{{ url_for('login') }}">Login</a></li>
             <li><a href="{{ url_for('register') }}">Register</a></li>
+            <li><a href="{{ url_for('admin_live_results') }}">Live Results</a></li>
         </ul>
     </nav>
 
-   <header class="hero-section">
-    <video autoplay muted loop id="bg-video">
-        <source src="{{ url_for('static', filename='videos/flag.mp4') }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    <div class="overlay"></div>
-    <div class="hero-content">
-        <h1>Welcome to Swarajya – India's Secure Digital Voting</h1>
-        <p>Vote with trust, power, and transparency</p>
-        <a href="{{ url_for('register') }}" class="cta-button">Get Started</a>
-    </div>
-</header>
+    <header class="hero-section">
+        <video autoplay muted loop id="bg-video">
+            <source src="../static/videos/Flag-2.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="overlay"></div>
+        <div class="hero-content" data-aos="fade-up">
+            <h1>Welcome to VoteUnity – Secure Your Say</h1>
+            <p>Fast, fair, and accessible digital voting for everyone.</p>
+            <a href="{{ url_for('register') }}" class="cta-button">Get Started</a>
+        </div>
+    </header>
+
+    <!-- One Vote Section -->
+    <section class="one-vote-section" data-aos="fade-up">
+        <div class="vote-container">
+            <div class="vote-image">
+                <img src="{{ url_for('static', filename='images/1 vote.png') }}" alt="One Vote Counts">
+            </div>
+            <div class="vote-info">
+                <h2>One Vote, One Voice</h2>
+                <p>Every vote counts. With VoteUnity, your single click helps shape the nation’s future. Participate
+                    safely, securely, and from anywhere.</p>
+                <video muted loop id="bg-video" autoplay></video> <!-- this is background video -->
+
+                <!-- Your one vote video: -->
+                <video controls preload="none" poster="{{ url_for('static', filename='images/onevote.jpg') }}"
+                    class="vote-video">
+                    <source src="{{ url_for('static', filename='videos/voteone.mp4') }}" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
 
 
-    <section class="faq">
-        <h2>FAQs - Your Voting Questions Answered</h2>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <h2 data-aos="fade-up">Frequently Asked Questions</h2>
         <div class="accordion">
-            <div class="accordion-item">
-                <button class="accordion-button">🛡️ How secure is my vote?</button>
+            <div class="accordion-item" data-aos="fade-up">
+                <button class="accordion-button">🔐 How secure is my vote?</button>
                 <div class="accordion-content">
-                    <p>All votes are protected with face recognition and encrypted in real time.</p>
+                    <p>Votes are encrypted and verified using facial recognition security</p>
                 </div>
             </div>
-            <div class="accordion-item">
-                <button class="accordion-button">🧾 Can I vote twice?</button>
+            <div class="accordion-item" data-aos="fade-up" data-aos-delay="100">
+                <button class="accordion-button">🚫 Can I vote more than once?</button>
                 <div class="accordion-content">
-                    <p>No, the system restricts users to a single verified vote per election.</p>
+                    <p>Each citizen can cast one verified vote only.</p>
                 </div>
             </div>
-            <div class="accordion-item">
-                <button class="accordion-button">🌍 Can I vote from another state or country?</button>
+            <div class="accordion-item" data-aos="fade-up" data-aos-delay="200">
+                <button class="accordion-button">🌍 Can I vote while abroad?</button>
                 <div class="accordion-content">
-                    <p>Yes. Voting is accessible nationwide with your verified identity.</p>
+                    <p>Yes, with identity verification, remote voting is supported worldwide.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>© 2025 BharatVote • Digital Voting for a Stronger Democracy</p>
+        <p>© 2025 VoteUnity • Empowering Every Citizen</p>
     </footer>
 
     <script>
+        AOS.init({ duration: 1000 });
+
         const buttons = document.querySelectorAll('.accordion-button');
         buttons.forEach(button => {
             button.addEventListener('click', () => {
                 const content = button.nextElementSibling;
                 button.classList.toggle('active');
+                content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
                 document.querySelectorAll('.accordion-content').forEach(c => {
                     if (c !== content) c.style.maxHeight = null;
                 });
-                content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
             });
         });
     </script>
+
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 </body>
+
 </html>
