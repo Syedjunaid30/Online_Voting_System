@@ -1,126 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>User Registration - Online Voting System</title>
-    <style>
-        body {
-            background-color: #1c1c1c;
-            color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}"> <!-- Your main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}"> <!-- Registration styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registration_animation.css') }}">
+    <!-- Optional: animations -->
 
-        .register-box {
-            background-color: #2b2b2b;
-            padding: 2rem 3rem;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-            width: 450px;
-        }
 
-        .register-box h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .register-box label {
-            display: block;
-            margin-top: 1rem;
-            font-weight: bold;
-        }
-
-        .register-box input {
-            width: 100%;
-            padding: 0.6rem;
-            border: none;
-            border-radius: 6px;
-            margin-top: 0.5rem;
-            background-color: #444;
-            color: white;
-        }
-
-        .register-box button {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.7rem;
-            background-color: #00d9ff;
-            color: #000;
-            font-weight: bold;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .register-box button:hover {
-            background-color: #00aacc;
-        }
-
-        .error {
-            color: red;
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .back-link {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .back-link a {
-            color: #00d9ff;
-            text-decoration: none;
-        }
-
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
+
 <body>
-    <form method="POST" class="register-box" enctype="multipart/form-data">
-        <h2>User Registration</h2>
+      <!-- Flash message container -->
+            <div id="flash-message-container">
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
+    <div class="registration-wrapper">
+        <form method="POST" class="register-box" enctype="multipart/form-data">
+            <h2>User Registration</h2>
 
-        <label for="name">Full Name:</label>
-        <input type="text" name="name" id="name" required>
+            <label for="name">Full Name:</label>
+            <input type="text" name="name" id="name" required>
 
-        <label for="voter_id">Voter ID:</label>
-        <input type="text" name="voter_id" id="voter_id" required>
+            <label for="voter_id">Voter ID:</label>
+            <input type="text" name="voter_id" id="voter_id" required>
 
-        <label for="epic_no">EPIC Number:</label>
-        <input type="text" name="epic_no" id="epic_no" required>
+            <label for="epic_no">EPIC Number:</label>
+            <input type="text" name="epic_no" id="epic_no" required>
 
-        <label for="dob">Date of Birth:</label>
-        <input type="date" name="dob" id="dob" required>
+            <label for="dob">Date of Birth:</label>
+            <input type="date" name="dob" id="dob" required>
 
-        <label for="phone">Phone Number:</label>
-        <input type="tel" name="phone" id="phone" required>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" name="phone" id="phone" required>
 
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" required>
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" required>
 
-        <label for="face_image">Upload Face Image:</label>
-        <input type="file" name="face_image" id="face_image" accept="image/*" required>
+            <label for="face_image">Upload Face Image:</label>
+            <input type="file" name="face_image" id="face_image" accept="image/*" required>
 
-        <button type="submit">Register</button>
+            <button type="submit" class="cta-button">Register</button>
 
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <div class="error">
-            {% for message in messages %}
-            <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% endwith %}
+          
 
-        <div class="back-link">
-            <a href="{{ url_for('home') }}">← Back to Home</a>
-        </div>
-    </form>
+            <div class="back-link">
+                <a href="{{ url_for('home') }}">← Back to Home</a>
+            </div>
+        </form>
+    </div>
 </body>
+
 </html>

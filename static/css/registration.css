@@ -1,0 +1,107 @@
+/* Form container with gradient background */
+.registration-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e293b, #3b82f6);
+    padding: 2rem;
+}
+
+/* Registration box */
+.register-box {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2);
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Labels and Inputs */
+.register-box label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.register-box input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    background-color: #f1f5f9;
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+/* CTA-style button */
+.register-box button.cta-button {
+    margin-top: 2rem;
+    width: 100%;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.register-box button.cta-button:hover {
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+}
+
+/* Error messages */
+.error {
+    color: #ef4444;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Back link */
+.back-link {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.back-link a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+#flash-message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.flash-message {
+    background-color: #2563eb;
+    color: white;
+    padding: 1rem 1.5rem;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-weight: 500;
+    opacity: 1;
+    animation: fadeOutStable 5s forwards;
+}
+
+/* Smooth fade-out animation */
+@keyframes fadeOutStable {
+    0%, 85% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
