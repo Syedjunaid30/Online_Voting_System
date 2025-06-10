@@ -1,0 +1,221 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0f172a; /* deep slate background */
+    color: #f1f5f9; /* light text */
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #1e293b;
+    padding: 0.8rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #60a5fa;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.logout-btn {
+    background-color: #ef4444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #dc2626;
+}
+
+/* Dashboard Wrapper */
+.dashboard-wrapper {
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Welcome Heading */
+h2 {
+    text-align: center;
+    color: #93c5fd;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Flash Notification / Toast Message */
+.toast-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #1e40af;
+    color: #e0f2fe;
+    padding: 1rem 1.5rem;
+    border-left: 5px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    animation: fadeInOut 5s forwards;
+    min-width: 250px;
+    max-width: 400px;
+    font-size: 0.95rem;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); display: none; }
+}
+
+/* Info Message Box (persistent) */
+.info-msg {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 1rem 1.5rem;
+    border-left: 5px solid #facc15;
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 600px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+
+/* Face Verification */
+.center-video-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+#video-container {
+    border: 3px solid #60a5fa;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(30, 64, 175, 0.4);
+}
+
+#status {
+    text-align: center;
+    color: #cbd5e1;
+    font-style: italic;
+    margin-top: 1rem;
+}
+
+/* Party Cards */
+.party-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.party-form {
+    text-align: center;
+}
+
+.party-card {
+    background-color: #f8fafc;
+    border-top: 6px solid #60a5fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 220px;
+    color: #1e293b;
+}
+
+.party-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.party-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+}
+
+.party-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+/* Vote Button */
+.vote-btn {
+    background-color: var(--btn-color, #2563eb);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.vote-btn.enabled {
+    cursor: pointer;
+    opacity: 1;
+}
+
+.vote-btn:hover.enabled {
+    background-color: #1e40af;
+}
+
+/* Dashboard Buttons */
+.dashboard-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.dashboard-btn {
+    text-decoration: none;
+    background-color: #64748b;
+    color: #fff;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.dashboard-btn:hover {
+    background-color: #475569;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

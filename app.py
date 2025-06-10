@@ -481,7 +481,6 @@ def admin_manage_parties():
 
 #---------------------live results---------------------
 @app.route('/admin/live_results')
-@login_required('admin')
 def admin_live_results():
     connection = get_db_connection()  # your pymysql connection function
     try:
@@ -494,7 +493,7 @@ def admin_live_results():
                 result = cursor.fetchone()
                 party['votes'] = result['vote_count'] if result else 0
 
-        dashboard_url = url_for('admin_dashboard')  # For navbar link
+        dashboard_url = url_for('home')  # For navbar link
 
     finally:
         connection.close()

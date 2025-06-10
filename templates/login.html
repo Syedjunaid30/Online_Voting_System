@@ -1,119 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
     <title>Login - Online Voting System</title>
-    <style>
-        body {
-            background-color: #1c1c1c;
-            color: white;
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .login-box {
-            background-color: #2b2b2b;
-            padding: 2rem 3rem;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-            width: 400px;
-        }
-
-        .login-box h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .login-box label {
-            display: block;
-            margin-top: 1rem;
-            font-weight: bold;
-        }
-
-        .login-box input,
-        .login-box select {
-            width: 100%;
-            padding: 0.6rem;
-            border: none;
-            border-radius: 6px;
-            margin-top: 0.5rem;
-            background-color: #444;
-            color: white;
-        }
-
-        .login-box button {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.7rem;
-            background-color: #00d9ff;
-            color: #000;
-            font-weight: bold;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        .login-box button:hover {
-            background-color: #00aacc;
-        }
-
-        .error {
-            color: red;
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .back-link {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .back-link a {
-            color: #00d9ff;
-            text-decoration: none;
-        }
-
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    
 </head>
+
 <body>
-    <form method="POST" class="login-box">
-        <h2>Login</h2>
-
-        <label for="role">Select Role:</label>
-        <select name="role" id="role" required onchange="updateLoginLabel()">
-            <option value="voter">Voter</option>
-            <option value="admin">Admin</option>
-        </select>
-
-        <label for="username" id="username-label">Phone Number:</label>
-        <input type="text" name="username" id="username" placeholder="Enter your Phone Number" required>
-
-        <label for="password">Password:</label>
-        <input type="password" name="password" required>
-
-        <button type="submit">Login</button>
-
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="error">
-                    {% for message in messages %}
-                        <p>{{ message }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
-        <div class="back-link">
-            <a href="{{ url_for('home') }}">← Back to Home</a>
+     {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div id="flash-message" class="flash-message">
+            {{ messages[0] }}
         </div>
-    </form>
+    {% endif %}
+    {% endwith %}
+    <div class="login-wrapper">
+        <form method="POST" class="login-box">
+            <h2>Login</h2>
 
+            <label for="role">Select Role:</label>
+            <select name="role" id="role" required onchange="updateLoginLabel()">
+                <option value="voter">Voter</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <label for="username" id="username-label">Phone Number:</label>
+            <input type="text" name="username" id="username" placeholder="Enter your Phone Number" required>
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" required>
+
+            <button type="submit" class="cta-button">Login</button>
+
+            <div class="back-link">
+                <a href="{{ url_for('home') }}">← Back to Home</a>
+            </div>
+        </form>
+    </div>
+
+   
+
+    <script src="{{ url_for('static', filename='js/notification.js') }}"></script>
     <script>
         function updateLoginLabel() {
             const role = document.getElementById("role").value;
@@ -128,9 +58,8 @@
                 input.placeholder = "Enter your Admin Username";
             }
         }
-
-        // Trigger on page load
         window.onload = updateLoginLabel;
     </script>
 </body>
+
 </html>

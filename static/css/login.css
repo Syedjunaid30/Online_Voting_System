@@ -1,5 +1,5 @@
-/* Form container with gradient background */
-.registration-wrapper {
+/* Page background and wrapper */
+.login-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,25 +8,40 @@
     padding: 2rem;
 }
 
-/* Registration box */
-.register-box {
+/* Login box with fade-in animation */
+.login-box {
     background: rgba(255, 255, 255, 0.95);
     padding: 2.5rem 3rem;
     border-radius: 12px;
     box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2);
     width: 100%;
     max-width: 500px;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
-/* Labels and Inputs */
-.register-box label {
+/* Fade-in keyframe animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Form labels */
+.login-box label {
     display: block;
     margin-top: 1rem;
     font-weight: 600;
     color: #1e293b;
 }
 
-.register-box input {
+/* Inputs and selects */
+.login-box input,
+.login-box select {
     width: 100%;
     padding: 0.7rem;
     border: 1px solid #cbd5e1;
@@ -37,8 +52,8 @@
     font-size: 1rem;
 }
 
-/* CTA-style button */
-.register-box button.cta-button {
+/* Button styling */
+.login-box .cta-button {
     margin-top: 2rem;
     width: 100%;
     background: linear-gradient(135deg, #2563eb, #1e40af);
@@ -50,15 +65,8 @@
     cursor: pointer;
 }
 
-.register-box button.cta-button:hover {
+.login-box .cta-button:hover {
     background: linear-gradient(135deg, #1e40af, #2563eb);
-}
-
-/* Error messages */
-.error {
-    color: #ef4444;
-    text-align: center;
-    margin-top: 1rem;
 }
 
 /* Back link */
@@ -75,48 +83,41 @@
 .back-link a:hover {
     text-decoration: underline;
 }
-/* Animation */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+
+/* Flash message */
+.flash-message {
+    color: #ef4444;
+    text-align: center;
+    margin-top: 1rem;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
-.login-box {
-    animation: fadeIn 0.8s ease-in-out;
-}
 
-#flash-message-container {
+.flash-message {
     position: fixed;
     top: 20px;
     right: 20px;
+    background-color: #3b82f6;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    animation: fadeInOut 4s ease-in-out forwards;
     z-index: 9999;
 }
 
-.flash-message {
-    background-color: #2563eb;
-    color: white;
-    padding: 1rem 1.5rem;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    font-weight: 500;
-    opacity: 1;
-    animation: fadeOutStable 5s forwards;
-}
-
-/* Smooth fade-out animation */
-@keyframes fadeOutStable {
-    0%, 85% {
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    10%, 90% {
         opacity: 1;
+        transform: translateX(0);
     }
     100% {
         opacity: 0;
+        transform: translateX(100%);
     }
 }
-
