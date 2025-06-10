@@ -7,9 +7,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+        
 </head>
 
 <body>
+    <!-- Toast Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="toast-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <nav>
         <div class="logo">VoteUnity</div>
         <ul>
@@ -42,16 +53,14 @@
                 <h2>One Vote, One Voice</h2>
                 <p>Every vote counts. With VoteUnity, your single click helps shape the nation’s future. Participate
                     safely, securely, and from anywhere.</p>
-                <video muted loop id="bg-video" autoplay></video> <!-- this is background video -->
 
-                <!-- Your one vote video: -->
+                <video muted loop id="bg-video" autoplay></video>
+
                 <video controls preload="none" poster="{{ url_for('static', filename='images/onevote.jpg') }}"
                     class="vote-video">
                     <source src="{{ url_for('static', filename='videos/voteone.mp4') }}" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>
-
-
             </div>
         </div>
     </section>
@@ -63,7 +72,7 @@
             <div class="accordion-item" data-aos="fade-up">
                 <button class="accordion-button">🔐 How secure is my vote?</button>
                 <div class="accordion-content">
-                    <p>Votes are encrypted and verified using facial recognition security</p>
+                    <p>Votes are encrypted and verified using facial recognition security.</p>
                 </div>
             </div>
             <div class="accordion-item" data-aos="fade-up" data-aos-delay="100">
@@ -84,22 +93,6 @@
     <footer>
         <p>© 2025 VoteUnity • Empowering Every Citizen</p>
     </footer>
-
-    <script>
-        AOS.init({ duration: 1000 });
-
-        const buttons = document.querySelectorAll('.accordion-button');
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                button.classList.toggle('active');
-                content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
-                document.querySelectorAll('.accordion-content').forEach(c => {
-                    if (c !== content) c.style.maxHeight = null;
-                });
-            });
-        });
-    </script>
 
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 </body>
