@@ -17,7 +17,8 @@ nav {
     border-bottom: 1px solid #475569;
 }
 
-.nav-left, .nav-right {
+.nav-left,
+.nav-right {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -60,9 +61,9 @@ nav a:hover::after {
     padding: 2rem;
     max-width: 600px;
     margin: 2rem auto;
-    background-color: #fff;
+    background-color: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
 }
 
 h1 {
@@ -79,11 +80,12 @@ form {
 
 label {
     font-weight: 600;
-    margin-bottom: 0.3rem;
 }
 
 input[type="text"],
 input[type="date"],
+input[type="tel"],
+input[type="password"],
 input[type="file"] {
     padding: 10px;
     border: 1px solid #cbd5e1;
@@ -96,39 +98,6 @@ input[type="file"] {
 input:focus {
     border-color: #3b82f6;
     outline: none;
-}
-
-.flash {
-    padding: 10px 15px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-.flash.success {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-
-.flash.error {
-    background-color: #fee2e2;
-    color: #991b1b;
-}
-
-.current-image {
-    margin-bottom: 1rem;
-}
-
-.current-image img {
-    border: 2px solid #cbd5e1;
-    border-radius: 6px;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-top: 1rem;
 }
 
 .submit-btn {
@@ -146,31 +115,14 @@ input:focus {
     background-color: #2563eb;
 }
 
-.cancel-btn {
-    text-decoration: none;
-    padding: 10px 20px;
-    background-color: #e2e8f0;
-    color: #1f2937;
+.flash {
+    padding: 10px 15px;
     border-radius: 6px;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
+    font-weight: bold;
+    margin-top: 1rem;
 }
 
-.cancel-btn:hover {
-    background-color: #cbd5e1;
-}
-
-.update-user-btn {
-    padding: 10px 20px;
-    background-color: #10b981; /* emerald green */
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.update-user-btn:hover {
-    background-color: #059669;
+.flash.error {
+    background-color: #fee2e2;
+    color: #991b1b;
 }

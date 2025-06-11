@@ -374,7 +374,7 @@ def admin_register_user():
         connection = get_db_connection()
         try:
             with connection.cursor() as cursor:
-                # Check if voter_id, epic_no or phone already exists
+                # Check if voter_id, epic_no, or phone already exists
                 cursor.execute('SELECT * FROM users WHERE voter_id = %s OR epic_no = %s OR phone = %s',
                                (voter_id, epic_no, phone))
                 existing = cursor.fetchone()
@@ -390,13 +390,14 @@ def admin_register_user():
                 ''', (name, voter_id, epic_no, dob, phone, password))
 
             connection.commit()
-            flash('User registered successfully.', 'success')
-            return redirect(url_for('admin_register_user'))
+            flash('User added successfully.', 'success')
+            return redirect(url_for('admin_list_users'))  # ✅ Redirect here after success
 
         finally:
             connection.close()
 
     return render_template('admin_register_user.html')
+
 
 
 #---------------------update party---------------------
@@ -479,10 +480,10 @@ def admin_manage_parties():
 
     return render_template('admin_manage_parties.html', parties=parties)
 
-#---------------------live results---------------------
+# --------------------- Admin Live Results ---------------------
 @app.route('/admin/live_results')
 def admin_live_results():
-    connection = get_db_connection()  # your pymysql connection function
+    connection = get_db_connection()
     try:
         with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute('SELECT * FROM parties')
@@ -493,12 +494,33 @@ def admin_live_results():
                 result = cursor.fetchone()
                 party['votes'] = result['vote_count'] if result else 0
 
-        dashboard_url = url_for('home')  # For navbar link
+        dashboard_url = url_for('admin_dashboard')  # <- change this to match your actual admin dashboard route
 
     finally:
         connection.close()
 
     return render_template('admin_live_results.html', parties=parties, dashboard_url=dashboard_url)
+
+
+# --------------------- User Live Results ---------------------
+@app.route('/user/live_results')
+def user_live_results():
+    connection = get_db_connection()
+    try:
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+            cursor.execute('SELECT * FROM parties')
+            parties = cursor.fetchall()
+
+            for party in parties:
+                cursor.execute('SELECT COUNT(*) AS vote_count FROM votes WHERE party_id = %s', (party['id'],))
+                result = cursor.fetchone()
+                party['votes'] = result['vote_count'] if result else 0
+
+    finally:
+        connection.close()
+
+    return render_template('user_live_results.html', parties=parties)
+
 #--------------------- List Users ---------------------
 @app.route('/admin/users')
 @login_required('admin')
@@ -654,22 +676,21 @@ def reset_all():
 def api_votes_data():
     connection = get_db_connection()
     try:
-        with connection.cursor() as cursor:
+        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute('SELECT * FROM parties')
             parties = cursor.fetchall()
 
             cursor.execute('SELECT party_id, COUNT(*) AS vote_count FROM votes GROUP BY party_id')
             votes = cursor.fetchall()
+            vote_map = {v['party_id']: v['vote_count'] for v in votes}
 
-            votes_count = {v['party_id']: v['vote_count'] for v in votes}
-
-            names, colors, logos, votes_list = [], [], [], []
+            names, votes_list, colors, logos = [], [], [], []
 
             for party in parties:
                 names.append(party['name'])
-                colors.append(party['color'])
-                logos.append(party['logo'])  # Assuming logo is path
-                votes_list.append(votes_count.get(party['id'], 0))
+                votes_list.append(vote_map.get(party['id'], 0))
+                colors.append(party['color'])  # e.g., "#FF0000"
+                logos.append(party['logo'])    # e.g., "bjp.png"
     finally:
         connection.close()
 
@@ -679,6 +700,7 @@ def api_votes_data():
         'colors': colors,
         'logos': logos
     })
+
 
 # -------------------- Face Path API --------------------
 @app.route('/get_face_path/<int:user_id>')

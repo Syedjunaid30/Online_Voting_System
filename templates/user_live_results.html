@@ -9,11 +9,6 @@
 <body>
 
   <nav class="navbar">
-    <div class="nav-left">
-      {% if dashboard_url %}
-      <a href="{{ dashboard_url }}" class="dashboard-btn">Back to Dashboard</a>
-      {% endif %}
-    </div>
     <div class="nav-right">
       <a href="{{ url_for('download_results') }}" class="download-btn">Download Results (PDF)</a>
     </div>

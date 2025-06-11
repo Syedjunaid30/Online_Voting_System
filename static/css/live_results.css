@@ -1,0 +1,151 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #1e293b;
+  color: #e2e8f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 70px;
+}
+
+/* Navbar styling */
+nav.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: #303031;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid #475569;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+nav a {
+  color: #e2e8f0;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 1px solid transparent;
+}
+
+nav a:hover {
+  background-color: #475569;
+  color: #ffffff;
+  border: 1px solid #94a3b8;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 100%;
+  height: 2px;
+  background-color: white;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+nav a:hover::after {
+  transform: scaleX(1);
+}
+
+/* Heading */
+h1 {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 25px;
+  color: #f8fafc;
+  text-align: center;
+}
+
+/* Chart container */
+#results-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-container {
+  background: #334155;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  width: 600px;
+  max-width: 90vw;
+  height: 380px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#votesChart {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Subheading */
+h3 {
+  margin-top: 30px;
+  color: #f1f5f9;
+}
+
+/* Vote table */
+#votesTable {
+  border-collapse: collapse;
+  width: 70%;
+  margin-top: 20px;
+  background-color: #334155;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  color: #f1f5f9;
+}
+
+#votesTable thead {
+  background-color: #1e293b;
+  color: white;
+}
+
+#votesTable th, #votesTable td {
+  padding: 12px;
+  border: 1px solid #475569;
+  text-align: center;
+  vertical-align: middle;
+}
+
+#votesTable td:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+#votesTable img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
