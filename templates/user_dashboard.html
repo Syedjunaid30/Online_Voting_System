@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard - Online Voting System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/userdashboard.css') }}">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="#" class="navbar-brand">Online Voting</a>
+        </div>
+        <div class="nav-right">
+            <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Dashboard Wrapper -->
+    <div class="dashboard-wrapper">
+        <div class="dashboard-box">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="toast-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <h2>Welcome, {{ session['user_name'] }}</h2>
+
+            {% if just_voted %}
+            <h3 style="color: #2563eb;">Thank you for your vote!</h3>
+
+            {% elif already_voted %}
+            <h3 style="color: #16a34a;">You have already voted.</h3>
+
+            {% elif parties|length == 0 %}
+            <div class="info-msg flash-message">
+                Elections have not yet been configured. Please check back later.
+            </div>
+
+            {% else %}
+            <p>Please verify your face to enable voting.</p>
+
+            <div class="center-video-wrapper" style="margin: 20px 0;">
+                <div id="video-container">
+                    <video id="video" width="320" height="240" autoplay muted></video>
+                </div>
+            </div>
+
+            <p id="status">Initializing face recognition...</p>
+
+            <div class="party-list">
+                {% for party in parties %}
+                <form method="POST" action="{{ url_for('vote') }}" class="party-form">
+                    <div class="party-card" style="border-left: 6px solid {{ party['color'] }};">
+                        <img src="{{ url_for('static', filename='party_logos/' + party['logo']) }}"
+                            alt="{{ party['name'] }} Logo">
+                        <h3>{{ party['name'] }}</h3>
+                        <input type="hidden" name="party_id" value="{{ party['id'] }}">
+                        <button type="submit" class="vote-btn" disabled style="--btn-color: {{ party['color'] }};">
+                            Vote
+                        </button>
+                    </div>
+                </form>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- JS -->
+    <script src="{{ url_for('static', filename='js/userdashboard.js') }}"></script>
+    <script>
+        const alreadyVoted = {{ 'true' if already_voted else 'false' }};
+        const userId = {{ user_id | tojson }};
+    </script>
+
+    {% if not already_voted and parties|length > 0 %}
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="{{ url_for('static', filename='js/face_verification.js') }}"></script>
+    {% endif %}
+</body>
+
+</html>

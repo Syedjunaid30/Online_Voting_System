@@ -282,11 +282,17 @@ def user_dashboard():
     vote = cursor.fetchone()
 
     already_voted = vote is not None
+    just_voted = session.pop('just_voted', False)  # Only True immediately after voting
 
     cursor.close()
     conn.close()
 
-    return render_template('user_dasboard.html', parties=parties, already_voted=already_voted, user_id=user_id)
+    return render_template('user_dashboard.html',  # fixed file name
+                           parties=parties,
+                           already_voted=already_voted,
+                           just_voted=just_voted,
+                           user_id=user_id)
+    
 
 #---------------------user vote---------------------
 @app.route('/vote', methods=['POST'])
@@ -316,8 +322,7 @@ def vote():
         cursor.execute('INSERT INTO votes (user_id, party_id) VALUES (%s, %s)', (user_id, party_id))
         conn.commit()
 
-        flash('Your vote has been recorded. Thank you!', 'success')
-        session['already_voted'] = True  # Reflect it in session
+        session['just_voted'] = True  # trigger thank-you message
 
     except Exception as e:
         conn.rollback()
@@ -689,8 +694,8 @@ def api_votes_data():
             for party in parties:
                 names.append(party['name'])
                 votes_list.append(vote_map.get(party['id'], 0))
-                colors.append(party['color'])  # e.g., "#FF0000"
-                logos.append(party['logo'])    # e.g., "bjp.png"
+                colors.append(party['color'])  
+                logos.append(party['logo'])    
     finally:
         connection.close()
 

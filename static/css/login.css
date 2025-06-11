@@ -1,123 +1,142 @@
-/* Page background and wrapper */
-.login-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #1e293b, #3b82f6);
-    padding: 2rem;
+/* ------------------- Global Reset ------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* Login box with fade-in animation */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1e293b, #3b82f6);
+  color: #e2e8f0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* ------------------- Wrapper ------------------- */
+.login-wrapper {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+}
+
+/* ------------------- Login Box ------------------- */
 .login-box {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 2.5rem 3rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(30, 64, 175, 0.2);
-    width: 100%;
-    max-width: 500px;
-    animation: fadeIn 0.8s ease-in-out;
+  background: #1e293b;
+  padding: 2.5rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.8s ease-in-out;
 }
 
 /* Fade-in keyframe animation */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Form labels */
+/* ------------------- Form Elements ------------------- */
 .login-box label {
-    display: block;
-    margin-top: 1rem;
-    font-weight: 600;
-    color: #1e293b;
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  transition: color 0.3s ease;
 }
 
-/* Inputs and selects */
 .login-box input,
 .login-box select {
-    width: 100%;
-    padding: 0.7rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    margin-top: 0.5rem;
-    background-color: #f1f5f9;
-    color: #1e293b;
-    font-size: 1rem;
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  margin-top: 0.5rem;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  background-color: #334155;
+  color: #f1f5f9;
+  font-size: 1rem;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Button styling */
+.login-box input:focus,
+.login-box select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* ------------------- CTA Button ------------------- */
 .login-box .cta-button {
-    margin-top: 2rem;
-    width: 100%;
-    background: linear-gradient(135deg, #2563eb, #1e40af);
-    color: white;
-    border: none;
-    padding: 0.8rem;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    cursor: pointer;
+  margin-top: 2rem;
+  width: 100%;
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .login-box .cta-button:hover {
-    background: linear-gradient(135deg, #1e40af, #2563eb);
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  transform: translateY(-1px);
 }
 
-/* Back link */
+/* ------------------- Back Link ------------------- */
 .back-link {
-    text-align: center;
-    margin-top: 1rem;
+  text-align: center;
+  margin-top: 1.2rem;
 }
 
 .back-link a {
-    color: #2563eb;
-    text-decoration: none;
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
 }
 
 .back-link a:hover {
-    text-decoration: underline;
+  color: #60a5fa;
+  text-decoration: underline;
 }
 
-/* Flash message */
+/* ------------------- Flash Message ------------------- */
 .flash-message {
-    color: #ef4444;
-    text-align: center;
-    margin-top: 1rem;
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-
-.flash-message {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #3b82f6;
-    color: white;
-    padding: 15px 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    font-weight: bold;
-    animation: fadeInOut 4s ease-in-out forwards;
-    z-index: 9999;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #3b82f6;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  animation: fadeInOut 4s ease-in-out forwards;
+  z-index: 9999;
 }
 
 @keyframes fadeInOut {
-    0% {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    10%, 90% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    100% {
-        opacity: 0;
-        transform: translateX(100%);
-    }
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
 }

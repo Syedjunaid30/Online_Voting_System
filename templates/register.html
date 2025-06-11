@@ -4,25 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <title>User Registration - Online Voting System</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}"> <!-- Your main CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}"> <!-- Registration styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/registration_animation.css') }}">
-    <!-- Optional: animations -->
-
-
 </head>
 
 <body>
-      <!-- Flash message container -->
-            <div id="flash-message-container">
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                {% for message in messages %}
-                <div class="flash-message">{{ message }}</div>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
-            </div>
+
+    <!-- Background Video -->
+    <video autoplay muted loop id="bg-video">
+        <source src="{{ url_for('static', filename='videos/flag-3.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Flash message container -->
+    <div id="flash-message-container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Registration Form -->
     <div class="registration-wrapper">
         <form method="POST" class="register-box" enctype="multipart/form-data">
             <h2>User Registration</h2>
@@ -49,8 +54,6 @@
             <input type="file" name="face_image" id="face_image" accept="image/*" required>
 
             <button type="submit" class="cta-button">Register</button>
-
-          
 
             <div class="back-link">
                 <a href="{{ url_for('home') }}">← Back to Home</a>
