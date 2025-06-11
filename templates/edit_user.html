@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edituser.css') }}">
+</head>
+
+<body>
+    <nav>
+        <div class="nav-left">
+            <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        </div>
+        <div class="nav-right">
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1>Edit User</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <label>Name:</label>
+            <input type="text" name="name" value="{{ user.name }}" required>
+
+            <label>Voter ID:</label>
+            <input type="text" name="voter_id" value="{{ user.voter_id }}" required>
+
+            <label>EPIC No:</label>
+            <input type="text" name="epic_no" value="{{ user.epic_no }}" required>
+
+            <label>Date of Birth:</label>
+            <input type="date" name="dob" value="{{ user.dob }}" required>
+
+            <label>Phone Number:</label>
+            <input type="text" name="phone" value="{{ user.phone }}" required>
+
+            <label>Face Image:</label>
+            {% if face_image %}
+                <div class="current-image">
+                    <p>Current Image:</p>
+                    <img src="{{ url_for('static', filename='face_data/' ~ face_image) }}" alt="Face image" width="120">
+                </div>
+            {% endif %}
+            <input type="file" name="face_image" accept="image/*">
+
+            <button type="submit">Update User</button>
+        </form>
+    </main>
+</body>
+</html>

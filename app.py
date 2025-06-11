@@ -499,14 +499,13 @@ def admin_live_results():
         connection.close()
 
     return render_template('admin_live_results.html', parties=parties, dashboard_url=dashboard_url)
-
-#---------------------list users---------------------
+#--------------------- List Users ---------------------
 @app.route('/admin/users')
 @login_required('admin')
 def admin_list_users():
     connection = get_db_connection()
     try:
-        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+        with connection.cursor() as cursor:
             cursor.execute('SELECT * FROM users')
             users = cursor.fetchall()
     finally:
@@ -514,40 +513,57 @@ def admin_list_users():
 
     return render_template('admin_list_users.html', users=users)
 
-#---------------------edit user---------------------
-@app.route('/admin/users/edit/<int:user_id>', methods=['GET', 'POST'])
+
+#--------------------- Edit User ---------------------
+@app.route('/admin/edit_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required('admin')
-def admin_edit_user(user_id):
-    connection = get_db_connection()
-    try:
-        with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-            if request.method == 'POST':
-                name = request.form['name']
-                voter_id = request.form['voter_id']
-                epic_no = request.form['epic_no']
-                dob = request.form['dob']
-                phone = request.form['phone']
-                password = request.form['password']
+def edit_user(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
-                cursor.execute('''
-                    UPDATE users SET name=%s, voter_id=%s, epic_no=%s, dob=%s, phone=%s, password=%s
-                    WHERE id=%s
-                ''', (name, voter_id, epic_no, dob, phone, password, user_id))
-                connection.commit()
-                flash('User updated successfully.', 'success')
-                return redirect(url_for('admin_list_users'))
+    if request.method == 'POST':
+        name = request.form['name']
+        voter_id = request.form['voter_id']
+        epic_no = request.form['epic_no']
+        dob = request.form['dob']
+        phone = request.form['phone']
+        face_image = request.files.get('face_image')
 
-            cursor.execute('SELECT * FROM users WHERE id = %s', (user_id,))
-            user = cursor.fetchone()
-            if not user:
-                flash('User not found.', 'danger')
-                return redirect(url_for('admin_list_users'))
-    finally:
-        connection.close()
+        # Get current image name from DB
+        cursor.execute("SELECT face_image FROM users WHERE id = %s", (user_id,))
+        user = cursor.fetchone()
+        current_image = user['face_image'] if user else None
 
-    return render_template('admin_edit_user.html', user=user)
+        # Save new face image if provided
+        if face_image and face_image.filename:
+            filename = secure_filename(f"user_{user_id}_" + face_image.filename)
+            image_path = os.path.join('static/face_data', filename)
+            face_image.save(image_path)
+            face_image_name = filename
+        else:
+            face_image_name = current_image
 
-#---------------------delete user---------------------
+        # Update user
+        cursor.execute("""
+            UPDATE users
+            SET name=%s, voter_id=%s, epic_no=%s, dob=%s, phone=%s, face_image=%s
+            WHERE id=%s
+        """, (name, voter_id, epic_no, dob, phone, face_image_name, user_id))
+
+        conn.commit()
+        conn.close()
+        flash('User updated successfully.', 'success')
+        return redirect(url_for('admin_list_users'))
+
+    # GET request - load form with current data
+    cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+    conn.close()
+
+    return render_template("edit_user.html", user=user)
+
+
+#--------------------- Delete User ---------------------
 @app.route('/admin/users/delete/<int:user_id>')
 @login_required('admin')
 def admin_delete_user(user_id):
