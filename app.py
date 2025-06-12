@@ -203,15 +203,22 @@ def register():
 
             uploaded_encoding = uploaded_encodings[0]
 
-            # Compare with existing face encodings
+            # Compare with existing face encodings using distance threshold
+            duplicate_found = False
             for existing_file in os.listdir(FACE_DATA_FOLDER):
                 if existing_file.lower().endswith(('.png', '.jpg', '.jpeg')):
                     existing_img_path = os.path.join(FACE_DATA_FOLDER, existing_file)
                     existing_img = face_recognition.load_image_file(existing_img_path)
                     existing_encodings = face_recognition.face_encodings(existing_img)
-                    if existing_encodings and face_recognition.compare_faces([existing_encodings[0]], uploaded_encoding)[0]:
-                        flash('This face image is already registered with another account.')
-                        return redirect(request.url)
+                    if existing_encodings:
+                        distance = face_recognition.face_distance([existing_encodings[0]], uploaded_encoding)[0]
+                        if distance < 0.45:  # Stricter match threshold
+                            duplicate_found = True
+                            break
+
+            if duplicate_found:
+                flash('This face image is already registered with another account.')
+                return redirect(request.url)
 
             try:
                 conn = get_db_connection()
@@ -266,6 +273,7 @@ def register():
             return redirect(request.url)
 
     return render_template('register.html')
+
 
 #---------------------user dashboard---------------------
 @app.route('/user/dashboard')
@@ -612,36 +620,33 @@ def reset_all():
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        # Delete all images from face_data folder
         face_dir = os.path.join(current_app.root_path, 'static', 'face_data')
         if os.path.exists(face_dir):
             for filename in os.listdir(face_dir):
                 file_path = os.path.join(face_dir, filename)
-                try:
-                    if os.path.isfile(file_path):
-                        os.unlink(file_path)
-                except Exception as e:
-                    print(f'Failed to delete {file_path}. Reason: {e}')
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
 
+        # Delete all logos from party_logos folder
         logos_dir = os.path.join(current_app.root_path, 'static', 'party_logos')
         if os.path.exists(logos_dir):
             for filename in os.listdir(logos_dir):
                 file_path = os.path.join(logos_dir, filename)
-                try:
-                    if os.path.isfile(file_path):
-                        os.unlink(file_path)
-                except Exception as e:
-                    print(f'Failed to delete {file_path}. Reason: {e}')
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
 
-# ----------------------Delete Flask-Session files-----------------------------
+        # Delete Flask session files (if using Flask-Session)
         session_dir = current_app.config.get('SESSION_FILE_DIR')
         if session_dir and os.path.exists(session_dir):
             for filename in os.listdir(session_dir):
                 file_path = os.path.join(session_dir, filename)
-                try:
-                    if os.path.isfile(file_path):
-                        os.unlink(file_path)
-                except Exception as e:
-                    print(f'Failed to delete session file {file_path}. Reason: {e}')
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+
+        # Clear database tables and reset IDs
+        cursor.execute("DELETE FROM votes")
+        cursor.execute("ALTER TABLE votes AUTO_INCREMENT = 1")
 
         cursor.execute("DELETE FROM users")
         cursor.execute("ALTER TABLE users AUTO_INCREMENT = 1")
@@ -649,32 +654,35 @@ def reset_all():
         cursor.execute("DELETE FROM parties")
         cursor.execute("ALTER TABLE parties AUTO_INCREMENT = 1")
 
-        cursor.execute("DELETE FROM votes")
-        cursor.execute("ALTER TABLE votes AUTO_INCREMENT = 1")
-
         cursor.execute("DELETE FROM admins")
         cursor.execute("ALTER TABLE admins AUTO_INCREMENT = 1")
+
+        # Insert default admin back
         cursor.execute("""
             INSERT INTO admins (id, username, password)
             VALUES (%s, %s, %s)
         """, (1, 'admin', 'admin@123'))
 
         conn.commit()
-        cursor.close()
-        conn.close()
 
+        # Clear session and close DB
         session.clear()
-
-        flash('System reset completed. Admin reset. User IDs will now start from 1.')
+        flash('✅ System reset completed. Admin restored. User IDs reset.', 'success')
 
     except Exception as e:
-        flash(f'Error during reset: {e}')
         if conn:
             conn.rollback()
+        flash(f'❌ Error during reset: {e}', 'danger')
+
+    finally:
+        if cursor:
             cursor.close()
+        if conn:
             conn.close()
 
+    # Important: ensure dashboard is reloaded
     return redirect(url_for('admin_dashboard'))
+
 
 # -------------------- API for Chart Votes --------------------
 @app.route('/api/votes_data')
