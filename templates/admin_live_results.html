@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Live Voting Results</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/live_results.css') }}">
 </head>
+
 <body>
 
   <nav class="navbar">
@@ -19,9 +21,9 @@
     </div>
   </nav>
 
-  <h1>Live Voting Results</h1>
+  <main id="results-wrapper">
+    <h1>📊 Live Voting Results</h1>
 
-  <div id="results-wrapper">
     <div class="chart-container">
       <canvas id="votesChart"></canvas>
     </div>
@@ -35,92 +37,105 @@
         </tr>
       </thead>
       <tbody id="votesTableBody">
-        <!-- JS fills this -->
+        <!-- Populated by JavaScript -->
       </tbody>
     </table>
-  </div>
+  </main>
 
   <script>
     const ctx = document.getElementById('votesChart').getContext('2d');
-    const votesChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [{
-          label: 'Votes',
-          data: [],
-          backgroundColor: [],
-          borderColor: '#94a3b8',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (context) => `Votes: ${context.parsed.y}`
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              color: '#e2e8f0',
-              precision: 0  // avoid showing decimals
-            },
-            grid: {
-              color: '#475569'
-            }
-          },
-          x: {
-            ticks: {
-              color: '#e2e8f0'
-            },
-            grid: {
-              color: '#475569'
-            }
-          }
-        }
-      }
-    });
+    let chart;
 
-    async function fetchVotes() {
-      try {
-        const response = await fetch('{{ url_for("api_votes_data") }}');
-        if (!response.ok) throw new Error('Fetch failed');
-        const data = await response.json();
-
-        // Update chart
-        votesChart.data.labels = data.names;
-        votesChart.data.datasets[0].data = data.votes;
-        votesChart.data.datasets[0].backgroundColor = data.colors;
-        votesChart.update();
-
-        // Update table
-        const tbody = document.getElementById("votesTableBody");
-        tbody.innerHTML = "";
-        data.names.forEach((name, i) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>
-              <img src="/static/party_logos/${data.logos[i]}" alt="${name} Logo">
-              ${name}
-            </td>
-            <td>${data.votes[i]}</td>
-          `;
-          tbody.appendChild(row);
-        });
-
-      } catch (err) {
-        console.error("Error updating results:", err);
-      }
+    async function fetchVotesData() {
+      const response = await fetch('{{ url_for("api_votes_data") }}');
+      if (!response.ok) throw new Error("Failed to fetch data");
+      return await response.json();
     }
 
-    fetchVotes();
-    setInterval(fetchVotes, 5000);
+    function updateVotesTable(data) {
+      const tableBody = document.getElementById('votesTableBody');
+      tableBody.innerHTML = '';
+
+      data.names.forEach((name, index) => {
+        const logo = data.logos[index];
+        const votes = data.votes[index];
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>
+            <img src="/static/party_logos/${logo}" alt="${name} logo" width="30" height="30" style="border-radius: 50%; object-fit: cover;">
+            ${name}
+          </td>
+          <td>${votes}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    async function createOrUpdateChart() {
+      const data = await fetchVotesData();
+
+      const dataset = {
+        data: data.votes,
+        backgroundColor: data.colors,
+        borderColor: data.colors,
+        borderWidth: 1,
+        borderRadius: 6,
+        barThickness: 20,
+        categoryPercentage: 0.6,
+        barPercentage: 0.8
+      };
+
+      if (chart) {
+        chart.data.labels = data.names;
+        chart.data.datasets[0] = dataset;
+        chart.update();
+      } else {
+        chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: data.names,
+            datasets: [dataset]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 400 },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { stepSize: 1, color: '#e2e8f0' },
+                grid: { color: '#334155' }
+              },
+              x: {
+                ticks: { color: '#e2e8f0' },
+                grid: { display: false }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#ffffff',
+                titleColor: '#1e293b',
+                bodyColor: '#1e293b',
+                borderColor: '#94a3b8',
+                borderWidth: 1,
+                boxPadding: 8,
+                callbacks: {
+                  label: context => `Votes: ${context.parsed.y}`
+                }
+              }
+            }
+          }
+        });
+      }
+
+      updateVotesTable(data);
+    }
+
+    createOrUpdateChart();
+    setInterval(createOrUpdateChart, 5000);
   </script>
 </body>
+
 </html>

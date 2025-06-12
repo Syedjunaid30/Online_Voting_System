@@ -1,7 +1,7 @@
 const video = document.getElementById('video');
 const status = document.getElementById('status');
 const videoContainer = document.getElementById('video-container');
-const partyList = document.getElementById('partyList');
+const partyList = document.querySelector('.party-list');
 
 if (alreadyVoted) {
     if (status) status.textContent = "✅ You have already voted. Thank you!";
@@ -19,7 +19,10 @@ if (alreadyVoted) {
             .then(stream => {
                 video.srcObject = stream;
             })
-            .catch(err => console.error("❌ Camera error:", err));
+            .catch(err => {
+                console.error("❌ Camera error:", err);
+                if (status) status.textContent = "Camera access denied.";
+            });
     }
 
     video.addEventListener('play', async () => {
@@ -34,14 +37,14 @@ if (alreadyVoted) {
 
             const canvas = faceapi.createCanvasFromMedia(video);
             canvas.style.position = 'absolute';
-            canvas.style.top = '0';
-            canvas.style.left = '0';
+            canvas.style.top = `${video.offsetTop}px`;
+            canvas.style.left = `${video.offsetLeft}px`;
             canvas.style.zIndex = 2;
-            canvas.width = video.width;
-            canvas.height = video.height;
+            canvas.width = video.offsetWidth;
+            canvas.height = video.offsetHeight;
             videoContainer.appendChild(canvas);
 
-            const displaySize = { width: video.width, height: video.height };
+            const displaySize = { width: video.offsetWidth, height: video.offsetHeight };
             faceapi.matchDimensions(canvas, displaySize);
 
             let faceVerified = false;
@@ -60,40 +63,45 @@ if (alreadyVoted) {
                 results.forEach((result, i) => {
                     const box = resized[i].detection.box;
 
-                    // Make a smaller, more accurate box
-                    const shrinkAmount = 10;
+                    const shrink = 10;
                     const smallBox = {
-                        x: box.x + shrinkAmount / 2,
-                        y: box.y + shrinkAmount / 2,
-                        width: box.width - shrinkAmount,
-                        height: box.height - shrinkAmount
+                        x: box.x + shrink / 2,
+                        y: box.y + shrink / 2,
+                        width: box.width - shrink,
+                        height: box.height - shrink
                     };
 
-                    const drawBox = new faceapi.draw.DrawBox(smallBox, { label: result.toString() });
+                    const drawBox = new faceapi.draw.DrawBox(smallBox, {
+                        label: result.toString()
+                    });
                     drawBox.draw(canvas);
 
                     if (result.label !== 'unknown' && !faceVerified) {
                         faceVerified = true;
-
-                        if (status) status.textContent = "✅ Face Verified. Please cast your vote.";
-
-                        document.querySelectorAll('.vote-btn').forEach(btn => btn.disabled = false);
+                        if (status) status.textContent = "✅ Face Verified. You may vote.";
+                        document.querySelectorAll('.vote-btn').forEach(btn => {
+                            btn.disabled = false;
+                            btn.classList.add('enabled');
+                        });
                     }
                 });
             }, 1000);
 
-            // When user votes, stop camera and disable UI
             document.querySelectorAll('.party-form').forEach(form => {
                 form.addEventListener('submit', () => {
                     clearInterval(interval);
-
                     if (video.srcObject) {
                         video.srcObject.getTracks().forEach(track => track.stop());
                         video.srcObject = null;
                     }
 
+                    canvas.remove();
+
                     if (status) status.textContent = "🗳️ Thank you for voting!";
-                    document.querySelectorAll('.vote-btn').forEach(btn => btn.disabled = true);
+                    document.querySelectorAll('.vote-btn').forEach(btn => {
+                        btn.disabled = true;
+                        btn.classList.remove('enabled');
+                    });
                 });
             });
 
@@ -110,10 +118,7 @@ if (alreadyVoted) {
             .withFaceLandmarks()
             .withFaceDescriptor();
 
-        if (!detection) {
-            throw new Error("No face detected in stored image.");
-        }
-
+        if (!detection) throw new Error("No face detected in stored image.");
         return new faceapi.LabeledFaceDescriptors("user", [detection.descriptor]);
     }
 }

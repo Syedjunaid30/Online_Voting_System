@@ -1,3 +1,4 @@
+/* Global Reset */
 * {
   box-sizing: border-box;
 }
@@ -5,8 +6,8 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #1e293b;
-  color: #e2e8f0;
+  background-color: #26272e; /* Deep dark navy background */
+  color: #f1f5f9;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -14,7 +15,7 @@ body {
   padding-top: 70px;
 }
 
-/* Navbar styling */
+/* Navbar - Do not change */
 nav.navbar {
   position: fixed;
   top: 0;
@@ -75,30 +76,31 @@ nav a:hover::after {
 /* Heading */
 h1 {
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 2.2rem;
   margin-bottom: 25px;
   color: #f8fafc;
   text-align: center;
+  text-shadow: 1px 1px 2px #000000;
 }
 
-/* Chart container */
-#results-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+/* Chart Container */
 .chart-container {
-  background: #334155;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  width: 600px;
+  background: #0d1b2a; /* Updated chart background */
+  border-radius: 20px;
+  padding: 2rem;
+  width: 700px;
   max-width: 90vw;
-  height: 380px;
+  height: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 40px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.chart-container:hover {
+  transform: translateY(-6px);
 }
 
 #votesChart {
@@ -106,46 +108,58 @@ h1 {
   height: 100% !important;
 }
 
-/* Subheading */
+/* Table Section */
 h3 {
   margin-top: 30px;
-  color: #f1f5f9;
+  font-size: 1.4rem;
+  color: #f8fafc;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-/* Vote table */
 #votesTable {
   border-collapse: collapse;
   width: 70%;
-  margin-top: 20px;
-  background-color: #334155;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  border-radius: 8px;
+  margin: 0 auto;
+  margin-top: 10px;
+  background-color: #0d1b2a; /* Matching the chart background */
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   color: #f1f5f9;
 }
 
 #votesTable thead {
   background-color: #1e293b;
-  color: white;
+  font-weight: bold;
 }
 
-#votesTable th, #votesTable td {
-  padding: 12px;
-  border: 1px solid #475569;
+#votesTable th,
+#votesTable td {
+  padding: 14px 16px;
   text-align: center;
-  vertical-align: middle;
+  border-bottom: 1px solid #334155;
+}
+
+#votesTable tbody tr:last-child td {
+  border-bottom: none;
 }
 
 #votesTable td:first-child {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
 }
 
 #votesTable img {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+#votesTable .vote-count {
+  font-weight: bold;
+  color: #94a3b8; /* Lighter color for vote count */
 }

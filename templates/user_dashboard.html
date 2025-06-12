@@ -46,14 +46,14 @@
             <p>Please verify your face to enable voting.</p>
 
             <div class="center-video-wrapper" style="margin: 20px 0;">
-                <div id="video-container">
+                <div id="video-container" class="video-frame">
                     <video id="video" width="320" height="240" autoplay muted></video>
                 </div>
             </div>
 
             <p id="status">Initializing face recognition...</p>
 
-            <div class="party-list">
+            <div class="party-list" id="partyList">
                 {% for party in parties %}
                 <form method="POST" action="{{ url_for('vote') }}" class="party-form">
                     <div class="party-card" style="border-left: 6px solid {{ party['color'] }};">
@@ -72,7 +72,6 @@
         </div>
     </div>
 
-    <!-- JS -->
     <script src="{{ url_for('static', filename='js/userdashboard.js') }}"></script>
     <script>
         const alreadyVoted = {{ 'true' if already_voted else 'false' }};
