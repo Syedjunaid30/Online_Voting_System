@@ -165,7 +165,7 @@ def register():
         phone = request.form.get('phone')
         password = request.form.get('password')
 
-        # Validate age
+        # Validate date of birth and age
         try:
             dob_date = datetime.strptime(dob, '%Y-%m-%d')
             today = datetime.today()
@@ -174,7 +174,17 @@ def register():
                 flash('You must be at least 18 years old to register.')
                 return redirect(request.url)
         except Exception:
-            flash('Invalid date of birth.')
+            flash('Invalid date of birth format.')
+            return redirect(request.url)
+
+        # Validate phone number
+        if not re.fullmatch(r'\d{10}', phone):
+            flash('Phone number must be exactly 10 digits.')
+            return redirect(request.url)
+
+        # Validate EPIC number (6–12 alphanumeric characters)
+        if not re.fullmatch(r'[A-Za-z0-9]{6,12}', epic_no):
+            flash('EPIC number must be 6–12 characters long and alphanumeric.')
             return redirect(request.url)
 
         # Validate password strength
@@ -187,23 +197,18 @@ def register():
             return redirect(request.url)
 
         file = request.files['face_image']
-
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
 
         if file and allowed_file(file.filename):
-            # Load and encode uploaded image
             img = face_recognition.load_image_file(file)
             uploaded_encodings = face_recognition.face_encodings(img)
-
             if not uploaded_encodings:
                 flash('No face detected in the uploaded image.')
                 return redirect(request.url)
 
             uploaded_encoding = uploaded_encodings[0]
-
-            # Compare with existing face encodings using distance threshold
             duplicate_found = False
             for existing_file in os.listdir(FACE_DATA_FOLDER):
                 if existing_file.lower().endswith(('.png', '.jpg', '.jpeg')):
@@ -212,7 +217,7 @@ def register():
                     existing_encodings = face_recognition.face_encodings(existing_img)
                     if existing_encodings:
                         distance = face_recognition.face_distance([existing_encodings[0]], uploaded_encoding)[0]
-                        if distance < 0.45:  # Stricter match threshold
+                        if distance < 0.45:
                             duplicate_found = True
                             break
 
@@ -224,14 +229,14 @@ def register():
                 conn = get_db_connection()
                 cursor = conn.cursor()
 
-                # Check for duplicate voter_id, epic_no, phone
+                # Check for existing voter_id, epic_no or phone
                 cursor.execute("SELECT * FROM users WHERE voter_id = %s OR epic_no = %s OR phone = %s",
                                (voter_id, epic_no, phone))
                 if cursor.fetchone():
-                    flash('User with the same Voter ID, EPIC number, or phone number already exists.')
+                    flash('A user with the same Voter ID, EPIC number, or phone number already exists.')
                     return redirect(request.url)
 
-                # Insert user
+                # Insert into DB
                 cursor.execute(
                     """
                     INSERT INTO users (name, voter_id, epic_no, dob, phone, password)
@@ -245,14 +250,12 @@ def register():
                 # Save face image
                 filename = f"user_{user_id}.jpg"
                 filepath = os.path.join(FACE_DATA_FOLDER, filename)
-                file.seek(0)  # Reset file pointer
+                file.seek(0)
                 file.save(filepath)
 
+                # Update DB with image path
                 relative_path = os.path.join('face_data', filename)
-                cursor.execute(
-                    "UPDATE users SET face_image=%s WHERE id=%s",
-                    (relative_path, user_id)
-                )
+                cursor.execute("UPDATE users SET face_image=%s WHERE id=%s", (relative_path, user_id))
                 conn.commit()
 
                 cursor.close()
@@ -273,7 +276,6 @@ def register():
             return redirect(request.url)
 
     return render_template('register.html')
-
 
 #---------------------user dashboard---------------------
 @app.route('/user/dashboard')

@@ -1,67 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>User Registration - Online Voting System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/registration.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/registration_animation.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
 </head>
-
 <body>
 
-    <!-- Background Video -->
-    <video id="bg-video" autoplay muted loop>
-        <source src="{{ url_for('static', filename='videos/flag-3.mp4') }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+<video id="bg-video" autoplay muted loop>
+    <source src="{{ url_for('static', filename='videos/flag-3.mp4') }}" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
 
-    <!-- Flash message container -->
-    <div id="flash-message-container">
-        {% with messages = get_flashed_messages() %}
+<div id="flash-message-container">
+    {% with messages = get_flashed_messages() %}
         {% if messages %}
-        {% for message in messages %}
-        <div class="flash-message">{{ message }}</div>
-        {% endfor %}
+            {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+            {% endfor %}
         {% endif %}
-        {% endwith %}
-    </div>
+    {% endwith %}
+</div>
 
-    <!-- Registration Form -->
-    <div class="registration-wrapper">
-        <form method="POST" class="register-box" enctype="multipart/form-data">
-            <h2>User Registration</h2>
+<div class="registration-wrapper">
+    <form method="POST" class="register-box" enctype="multipart/form-data">
+        <h2>User Registration</h2>
 
-            <label for="name">Full Name:</label>
-            <input type="text" name="name" id="name" required>
+        <label for="name">Full Name:</label>
+        <input type="text" name="name" id="name" required>
 
-            <label for="voter_id">Voter ID:</label>
-            <input type="text" name="voter_id" id="voter_id" required>
+        <label for="voter_id">Voter ID:</label>
+        <input type="text" name="voter_id" id="voter_id" required>
 
-            <label for="epic_no">EPIC Number:</label>
-            <input type="text" name="epic_no" id="epic_no" required>
+        <label for="epic_no">EPIC Number:</label>
+        <input type="text" name="epic_no" id="epic_no" required pattern="[A-Za-z0-9]{6,12}" title="6–12 alphanumeric characters">
 
-            <label for="dob">Date of Birth:</label>
-            <input type="date" name="dob" id="dob" required>
+        <label for="dob">Date of Birth:</label>
+        <input type="date" name="dob" id="dob" required>
 
-            <label for="phone">Phone Number:</label>
-            <input type="tel" name="phone" id="phone" required>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" name="phone" id="phone" pattern="\d{10}" title="Exactly 10 digits" required>
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" required>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
 
-            <label for="face_image">Upload Face Image:</label>
-            <input type="file" name="face_image" id="face_image" accept="image/*" required>
+        <label for="face_image">Upload Face Image:</label>
+        <input type="file" name="face_image" id="face_image" accept="image/*" required>
 
-            <button type="submit" class="cta-button">Register</button>
+        <button type="submit" class="cta-button">Register</button>
 
-            <div class="back-link">
-                <a href="{{ url_for('home') }}">← Back to Home</a>
-            </div>
-        </form>
-    </div>
+        <div class="back-link">
+            <a href="{{ url_for('home') }}">← Back to Home</a>
+        </div>
+    </form>
+</div>
+
 </body>
-
 </html>
