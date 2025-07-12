@@ -146,7 +146,7 @@ online-voting-system/
 └── .gitignore
 ```
 ---
-## 📷 Screenshots: It's in the folder of Screenshots.
+## 📷 Screenrecording: It's in the folder of Demo Screenrecording.
 
 ---
 📃 License
